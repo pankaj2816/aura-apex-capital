@@ -11,7 +11,8 @@ import {
 } from '@/data/fixtures';
 import { allowOne, isHostile, readBoundNumber, toPlainText } from '@/lib/sanitize';
 import { formatMoney, formatPlainPercent } from '@/lib/format';
-import Plate from './Plate';
+import PropertyPhoto from './PropertyPhoto';
+import { coverPhoto } from '@/data/photos';
 import DistrictMap from './DistrictMap';
 import PropertyDossier from './PropertyDossier';
 
@@ -244,10 +245,12 @@ export default function CatalogDesk({ initial }) {
 
       {view === 'grid' && !localBlocked && (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {list.map((property) => (
+          {list.map((property) => {
+            const photo = coverPhoto(property.id);
+            return (
             <article key={property.id} className="panel overflow-hidden rounded-3xl">
               <button type="button" className="block h-44 w-full" onClick={() => setOpenId(property.id)}>
-                <Plate id={property.id} label={property.name} />
+                <PropertyPhoto src={photo?.src} alt={photo?.alt || property.name} />
               </button>
               <div className="p-4">
                 <p className="text-xs muted">{districtById(property.districtId).name}</p>
@@ -261,16 +264,19 @@ export default function CatalogDesk({ initial }) {
                 </button>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {view === 'list' && !localBlocked && (
         <div className="mt-6 space-y-3">
-          {list.map((property) => (
+          {list.map((property) => {
+            const photo = coverPhoto(property.id);
+            return (
             <article key={property.id} className="panel flex flex-col gap-3 rounded-3xl p-3 sm:flex-row">
               <div className="h-28 w-full overflow-hidden rounded-2xl sm:w-40">
-                <Plate id={property.id} label="" />
+                <PropertyPhoto src={photo?.src} alt={photo?.alt || property.name} />
               </div>
               <div className="flex-1">
                 <p className="text-xs muted">{districtById(property.districtId).label}</p>
@@ -284,7 +290,8 @@ export default function CatalogDesk({ initial }) {
                 Open
               </button>
             </article>
-          ))}
+            );
+          })}
         </div>
       )}
 

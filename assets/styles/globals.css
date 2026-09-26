@@ -166,12 +166,6 @@ body {
   outline-offset: 2px;
 }
 
-.plate-sky { fill: rgb(var(--accent) / 0.18); }
-.plate-ground { fill: rgb(var(--bg-2)); }
-.plate-mass { fill: rgb(var(--ink) / 0.78); }
-.plate-glass { fill: rgb(var(--accent) / 0.45); }
-.plate-line { stroke: rgb(var(--gold)); fill: none; }
-
 input[type='range'] {
   accent-color: rgb(var(--accent));
 }

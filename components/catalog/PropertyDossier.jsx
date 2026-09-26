@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { AMENITIES, districtById } from '@/data/fixtures';
 import { formatMoney, formatPlainPercent } from '@/lib/format';
 import { useDesk } from '@/context/DeskContext';
-import Plate from './Plate';
+import PropertyPhoto from './PropertyPhoto';
+import { propertyPhotos } from '@/data/photos';
 import FloorPlan from './FloorPlan';
 import Calculator from './Calculator';
 import TourForm from './TourForm';
@@ -45,6 +46,8 @@ export default function PropertyDossier({ property, variant = 'page', onClose })
   const amenityLabels = property.amenities
     .map((id) => AMENITIES.find((item) => item.id === id)?.label)
     .filter(Boolean);
+  const shots = propertyPhotos(property.id);
+  const current = shots[photo] || shots[0];
 
   const body = (
     <div className={variant === 'modal' ? 'grid gap-6 lg:grid-cols-[1.3fr_0.9fr]' : 'grid gap-6 lg:grid-cols-[1.3fr_0.9fr]'}>
@@ -66,12 +69,19 @@ export default function PropertyDossier({ property, variant = 'page', onClose })
           {tab === 'photos' && (
             <div>
               <div className="h-64 md:h-80">
-                <Plate id={`${property.id}-${photo}`} label={`${property.name} plate ${photo + 1}`} />
+                <PropertyPhoto src={current?.src} alt={current?.alt || property.name} />
               </div>
               <div className="flex gap-2 p-3">
-                {[0, 1, 2].map((index) => (
-                  <button key={index} type="button" className="h-16 w-24 overflow-hidden rounded-xl" onClick={() => setPhoto(index)} aria-label={`Plate ${index + 1}`}>
-                    <Plate id={`${property.id}-thumb-${index}`} label="" />
+                {shots.map((shot, index) => (
+                  <button
+                    key={shot.src}
+                    type="button"
+                    className="h-16 w-24 overflow-hidden rounded-xl"
+                    onClick={() => setPhoto(index)}
+                    aria-label={shot.alt}
+                    aria-pressed={photo === index}
+                  >
+                    <PropertyPhoto src={shot.src} alt="" />
                   </button>
                 ))}
               </div>

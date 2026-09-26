@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { DISTRICTS, PROPERTIES, districtById } from '@/data/fixtures';
+import { coverPhoto, districtPhoto } from '@/data/photos';
 import { formatMoney } from '@/lib/format';
-import Plate from './catalog/Plate';
+import PropertyPhoto from './catalog/PropertyPhoto';
 
 export default function AtlasHome() {
   const featured = PROPERTIES.filter((property) => property.class === 'villa').slice(0, 3);
+  const hero = coverPhoto('monolith-villa');
   return (
     <div>
       <section className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:py-20">
@@ -27,7 +29,7 @@ export default function AtlasHome() {
         </div>
         <div className="panel overflow-hidden rounded-3xl">
           <div className="h-72 md:h-96">
-            <Plate id="monolith-villa" label="Monolith Villa" />
+            <PropertyPhoto src={hero?.src} alt={hero?.alt || 'Monolith Villa'} />
           </div>
           <div className="flex items-end justify-between gap-3 p-4">
             <div>
@@ -42,13 +44,21 @@ export default function AtlasHome() {
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6">
         <h2 className="display text-2xl">Five districts</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-5">
-          {DISTRICTS.map((district) => (
-            <Link key={district.id} href={`/properties?district=${district.id}`} className="panel rounded-2xl p-4">
-              <p className="text-xs uppercase tracking-[0.14em] muted">{district.label}</p>
-              <p className="mt-2 text-sm">{district.name}</p>
-              <p className="mt-2 text-xs muted">{district.blurb}</p>
-            </Link>
-          ))}
+          {DISTRICTS.map((district) => {
+            const photo = districtPhoto(district.id);
+            return (
+              <Link key={district.id} href={`/properties?district=${district.id}`} className="panel overflow-hidden rounded-2xl">
+                <div className="h-28">
+                  <PropertyPhoto src={photo?.src} alt={photo?.alt || district.name} />
+                </div>
+                <div className="p-4">
+                  <p className="text-xs uppercase tracking-[0.14em] muted">{district.label}</p>
+                  <p className="mt-2 text-sm">{district.name}</p>
+                  <p className="mt-2 text-xs muted">{district.blurb}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -60,10 +70,12 @@ export default function AtlasHome() {
           </Link>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          {featured.map((property) => (
+          {featured.map((property) => {
+            const photo = coverPhoto(property.id);
+            return (
             <Link key={property.id} href={`/properties/${property.id}`} className="panel overflow-hidden rounded-3xl">
               <div className="h-40">
-                <Plate id={property.id} label={property.name} />
+                <PropertyPhoto src={photo?.src} alt={photo?.alt || property.name} />
               </div>
               <div className="p-4">
                 <p className="text-xs muted">{districtById(property.districtId).name}</p>
@@ -71,7 +83,8 @@ export default function AtlasHome() {
                 <p className="mt-1 text-sm">{formatMoney(property.price)}</p>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

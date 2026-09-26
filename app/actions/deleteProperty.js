@@ -35,7 +35,7 @@ async function deleteProperty(propertyId) {
   // Delete images from Cloudinary
   if (publicIds.length > 0) {
     for (let publicId of publicIds) {
-      await cloudinary.uploader.destroy('propertypulse/' + publicId);
+      await cloudinary.uploader.destroy('aura-apex/' + publicId);
     }
   }
 

@@ -63,7 +63,7 @@ async function addProperty(formData) {
     const result = await cloudinary.uploader.upload(
       `data:image/png;base64,${imageBase64}`,
       {
-        folder: 'propertypulse',
+        folder: 'aura-apex',
       }
     );
 
